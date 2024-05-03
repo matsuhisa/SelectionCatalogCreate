@@ -1,13 +1,13 @@
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5"></p>
+<h2>SelectionCatalog Creator</h2>
+<p>file key: <input id="file_key" value=""></p>
 <button id="create">Create</button>
 <button id="cancel">Cancel</button>
 <script>
 
 document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('count');
-  const count = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
+  const textbox = document.getElementById('file_key');
+  const file_key = textbox.value;
+  parent.postMessage({ pluginMessage: { type: 'create-catalog', file_key } }, '*')
 }
 
 document.getElementById('cancel').onclick = () => {
