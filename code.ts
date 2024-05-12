@@ -42,51 +42,41 @@ figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
       (async () => {
         // Regular
         await figma.loadFontAsync({ family: "Inter", style: "Regular" });
-        // textLabel.fontName = { family: "Inter", style: "Regular" };
         const textLabel = figma.createText();
         textLabel.characters = section.name;
         textLabel.fontSize = 40;
         textLabel.fontName = { family: "Inter", style: "Regular" };
   
-        // frame.appendChild(textLabel);
         frame.insertChild(0, textLabel);
       })();
 
-      section.children.forEach((child, index) => {
+      section.children.forEach((child) => {
         if(child.type === 'FRAME') {
           const childFrame = child as FrameNode;
-
+          let index = 0;
           (async () => {
-            const bytes = await childFrame.exportAsync({
+            await childFrame.exportAsync({
               format: 'PNG',
               constraint: { type: 'SCALE', value: 1 },
-            })
-  
-            const image = figma.createImage(bytes);
-            const rectangle = figma.createRectangle();
-
-            rectangle.resize(childFrame.width, childFrame.height)
-            rectangle.fills = [{
-              imageHash: image.hash,
-              scaleMode: "FILL",
-              scalingFactor: 1,
-              type: "IMAGE",
-            }]
-            // frame.appendChild(rectangle);
-            frame.insertChild(index, rectangle);
+            }).then((bytes) => {
+              const image = figma.createImage(bytes);
+              const rectangle = figma.createRectangle();
+              rectangle.resize(childFrame.width, childFrame.height)
+              rectangle.fills = [{
+                imageHash: image.hash,
+                scaleMode: "FILL",
+                scalingFactor: 1,
+                type: "IMAGE",
+              }]
+              frame.insertChild(index, rectangle);
+              index++;
+            });
           })();
-
         }
       });
 
       wrapFrame.appendChild(frame);
     });
-
-    // const sectionNodes = page.findAll(node => node.type === 'SECTION');
-    // sectionNodes.forEach((sectionNode) => {
-    //   const sectionName = sectionNode.name;
-    //   console.log(sectionNode.parent);
-    // });
   }
 
   // figma.closePlugin();
