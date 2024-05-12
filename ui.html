@@ -1,8 +1,21 @@
 <h2>SelectionCatalog Creator</h2>
 <p>file key: <input id="file_key" value=""></p>
+<p>
+  https://www.figma.com/design/<strong>file_key</strong>/...
+</p>
 <button id="create">Create</button>
 <button id="cancel">Cancel</button>
+<style>
+body {
+  font-size: 0.6875rem;
+}
+</style>
 <script>
+onmessage = (event) => {
+  if(event.data.pluginMessage) {
+    document.getElementById('file_key').value = event.data.pluginMessage;
+  }
+}
 
 document.getElementById('create').onclick = () => {
   const textbox = document.getElementById('file_key');
@@ -13,5 +26,4 @@ document.getElementById('create').onclick = () => {
 document.getElementById('cancel').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
 }
-
 </script>

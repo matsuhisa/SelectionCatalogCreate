@@ -1,13 +1,21 @@
 figma.showUI(__html__);
 
-figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
+const file_key_backup = figma.root.getPluginData('file_key')
+if(file_key_backup){
+  figma.ui.postMessage(file_key_backup);
+}
 
-  if (msg.type === 'create-catalog') {
-    // const file_key = msg.file_key;
+figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
+  if (msg.type === 'create-catalog' && msg.file_key) {
+    const file_key = msg.file_key;
+    const file_name = figma.root.name;
     const page = figma.currentPage;
+
+    figma.root.setPluginData('file_key', file_key);
 
     // MEMO: 最終的にまとめる Frame を作る
     const wrapFrame = figma.createFrame();
+    wrapFrame.name = page.name;
     wrapFrame.layoutMode = "HORIZONTAL";
     wrapFrame.itemSpacing = 40;
     wrapFrame.horizontalPadding = 0;
@@ -16,14 +24,14 @@ figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
     wrapFrame.layoutSizingVertical = "HUG";
     wrapFrame.fills = [{ type: "SOLID", color: { r: 255/255, g: 255/255, b: 255/255 }, opacity: 0 }];
 
-    console.log(page);
-
     const sectionNodes = page.findAll(node => node.type === 'SECTION');
     sectionNodes.forEach((sectionNode) => {
       // MEMO: findAll で取得すると SceneNode になる。SectionNode ではない。
       // https://www.typescriptlang.org/docs/handbook/advanced-types.html
       // https://forum.figma.com/t/type-scenenode-is-not-assignable-to-type-componentnode/19694/2
       const section = sectionNode as SectionNode;
+
+      const url = `https://www.figma.com/file/${file_key}/${file_name}?node-id=${sectionNode.id}`;
 
       // MEMO : 情報をまとめる Frame を作る
       const frame = figma.createFrame();
@@ -46,7 +54,8 @@ figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
         textLabel.characters = section.name;
         textLabel.fontSize = 40;
         textLabel.fontName = { family: "Inter", style: "Regular" };
-  
+        textLabel.hyperlink = { type: "URL", value: url }
+
         frame.insertChild(0, textLabel);
       })();
 
@@ -79,5 +88,5 @@ figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
     });
   }
 
-  // figma.closePlugin();
+  figma.closePlugin();
 };
