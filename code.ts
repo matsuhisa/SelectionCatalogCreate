@@ -11,6 +11,10 @@ figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
     const file_name = figma.root.name;
     const page = figma.currentPage;
 
+    async () => {
+      await page.loadAsync();
+    }
+
     figma.root.setPluginData('file_key', file_key);
 
     // MEMO: 最終的にまとめる Frame を作る
@@ -24,7 +28,6 @@ figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
     wrapFrame.layoutSizingVertical = "HUG";
     wrapFrame.fills = [{ type: "SOLID", color: { r: 255/255, g: 255/255, b: 255/255 }, opacity: 0 }];
 
-    console.log(page);
 
     const sectionNodes = page.findAll(node => node.type === 'SECTION');
     sectionNodes.forEach((sectionNode) => {
