@@ -24,6 +24,8 @@ figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
     wrapFrame.layoutSizingVertical = "HUG";
     wrapFrame.fills = [{ type: "SOLID", color: { r: 255/255, g: 255/255, b: 255/255 }, opacity: 0 }];
 
+    console.log(page);
+
     const sectionNodes = page.findAll(node => node.type === 'SECTION');
     sectionNodes.forEach((sectionNode) => {
       // MEMO: findAll で取得すると SceneNode になる。SectionNode ではない。
@@ -86,7 +88,7 @@ figma.ui.onmessage =  (msg: {type: string, file_key: string}) => {
 
       wrapFrame.appendChild(frame);
     });
-  }
 
-  figma.closePlugin();
+    //figma.closePlugin();
+  }
 };

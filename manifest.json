@@ -1,6 +1,6 @@
 {
-  "name": "SelectionCatalogCreate",
-  "id": "1368056551748666710",
+  "name": "SelectionCatalogCreater",
+  "id": "1371493950449396200",
   "api": "1.0.0",
   "main": "code.js",
   "capabilities": [],
